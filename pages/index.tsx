@@ -1,7 +1,8 @@
 import { PrismaClient } from "@prisma/client";
 import { useState, useEffect } from "react";
-const prisma = new PrismaClient();
+import ContactForm from "../components/ContactForm";
 
+const prisma = new PrismaClient();
 export async function getServerSideProps() {
   const contacts = await prisma.contact.findMany();
   return {
@@ -18,30 +19,46 @@ export default function Home({ initialContacts }: { initialContacts: any[] }) {
     setContacts(initialContacts);
   }, [initialContacts]);
 
-  async function saveContact() {
-    const contact = {
-      firstName: Math.random().toString(),
-      lastName: Math.random().toString(),
-      email: "email",
-      avatar: "picture",
-    };
+  async function saveContact(data: any) {
+    const contact = data;
     const response = await fetch("/api/contacts", {
       method: "POST",
       body: JSON.stringify(contact),
     });
-
+    console.log("res", response);
     if (!response.ok) {
       throw new Error(response.statusText);
     }
     const json = await response.json();
-    console.log(json)
-    setContacts([...contacts, json]);
+    setContacts([json, ...contacts]);
   }
+
+  const handleDelete = async () => {
+    const response = await fetch("/api/felipe");
+    console.log("deleted", response);
+  };
 
   return (
     <div>
-      <div>{contacts.map(ctt => <div key={ctt.firstName}>{ctt.firstName}</div>)}</div>
-      <button onClick={saveContact}>new contact</button>
+      <button onClick={handleDelete}> empty</button>
+      <ContactForm
+        onSubmit={async (e: React.FormEvent) => {
+          e.preventDefault()
+          console.log(123)
+          // try {
+            // await saveContact();
+            // setContacts([...contacts, ]);
+            // e.target.reset();
+          // } catch (err) {
+          //   console.log(err);
+          // }
+        }}
+      />
+      <div>
+        {contacts.map((ctt) => (
+          <div key={ctt.firstName}>{ctt.firstName}</div>
+        ))}
+      </div>
     </div>
   );
 }

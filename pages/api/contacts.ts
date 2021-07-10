@@ -14,5 +14,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     data: contactData
   })
 
-  res.status(200).json(savedContact);
+  res.status(201).json(savedContact);
 }
