@@ -1,19 +1,23 @@
 import { useState } from "react";
 
 interface IContact {
-  firstName: string,
-  lastName: string,
-  email: string,
-  avatar: string,
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatar: string;
 }
 
 const initialState = {
-  firstName: "",
-  lastName: "",
-  email: "",
-  avatar: "",  
+  firstName: '',
+  lastName: '',
+  email: '',
+  avatar: '',
 };
-export default function Home({ onSubmit }: { onSubmit: any }) {
+export default function Home({
+  onSubmit,
+}: {
+  onSubmit: any;
+}) {
   const [query, setQuery] = useState<IContact>(initialState);
 
   const handleParam = (evt: React.FormEvent<HTMLInputElement>) => {
@@ -23,8 +27,14 @@ export default function Home({ onSubmit }: { onSubmit: any }) {
       [name]: value,
     }));
   };
+
+  const handleSubmit = (e: any) => {
+    onSubmit(query, e);
+    setQuery(initialState)
+  };
+
   return (
-    <form onSubmit={onSubmit}>
+    <form onSubmit={handleSubmit}>
       <input
         name="firstName"
         value={query.firstName}
@@ -49,7 +59,7 @@ export default function Home({ onSubmit }: { onSubmit: any }) {
         type="text"
         onChange={handleParam}
       />
-      {JSON.stringify(query)}
+      {/* {JSON.stringify(query)} */}
       <input type="submit" value="CREATE NEW EVENT" />
     </form>
   );

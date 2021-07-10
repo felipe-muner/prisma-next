@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Contact, Prisma} from "@prisma/client";
 import { useState, useEffect } from "react";
 import ContactForm from "../components/ContactForm";
 
@@ -19,7 +19,7 @@ export default function Home({ initialContacts }: { initialContacts: any[] }) {
     setContacts(initialContacts);
   }, [initialContacts]);
 
-  async function saveContact(data: any) {
+  async function saveContact(data: Prisma.ContactCreateInput) {
     const contact = data;
     const response = await fetch("/api/contacts", {
       method: "POST",
@@ -42,16 +42,14 @@ export default function Home({ initialContacts }: { initialContacts: any[] }) {
     <div>
       <button onClick={handleDelete}> empty</button>
       <ContactForm
-        onSubmit={async (e: React.FormEvent) => {
-          e.preventDefault()
-          console.log(123)
-          // try {
-            // await saveContact();
-            // setContacts([...contacts, ]);
-            // e.target.reset();
-          // } catch (err) {
-          //   console.log(err);
-          // }
+        onSubmit={async (data: any, e: any) => {
+          e.preventDefault();          
+          console.log(data);
+          try {
+            await saveContact(data);
+          } catch (err) {
+            console.log(err);
+          }
         }}
       />
       <div>
