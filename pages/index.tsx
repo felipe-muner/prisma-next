@@ -18,7 +18,7 @@ export default function Home({
 }: {
   initialContacts: Contact[];
 }) {
-  const [contacts, setContacts] = useState<any[]>(initialContacts);
+  const [contacts, setContacts] = useState<Contact[]>(initialContacts);
 
   useEffect(() => {
     setContacts(initialContacts);
@@ -26,7 +26,7 @@ export default function Home({
 
   const handleDelete = async () => {
     const response = await fetch("/api/felipe");
-    console.log("deleted", response);
+    if (response.ok) setContacts([]);
   };
 
   const saveContact = async (contact: Contact) => {
@@ -40,7 +40,7 @@ export default function Home({
     }
     const json = await response.json();
     setContacts([json, ...contacts]);
-    return json
+    return json;
   };
 
   return (

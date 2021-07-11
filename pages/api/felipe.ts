@@ -8,7 +8,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const savedContact = await prisma.contact.deleteMany({});
+  const deleted = await prisma.contact.deleteMany({});
 
-  res.json({ answer: 42 })
+  res.json({ msg: "ok", deleted });
 }
