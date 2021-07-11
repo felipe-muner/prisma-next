@@ -1,24 +1,21 @@
+import { PrismaClient, Contact, Prisma } from "@prisma/client";
 import { useState } from "react";
 
-interface IContact {
-  firstName: string;
-  lastName: string;
-  email: string;
-  avatar: string;
+interface IForm {
+  firstName: string,
+  lastName: string,
+  email: string,
+  avatar: string,
 }
 
-const initialState = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  avatar: '',
+const initialState = {  
+  firstName: "",
+  lastName: "",
+  email: "",
+  avatar: "",
 };
-export default function Home({
-  onSubmit,
-}: {
-  onSubmit: any;
-}) {
-  const [query, setQuery] = useState<IContact>(initialState);
+export default function Home({ saveContact }: { saveContact: any }) {
+  const [query, setQuery] = useState<IForm>(initialState);
 
   const handleParam = (evt: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = evt.currentTarget;
@@ -28,9 +25,11 @@ export default function Home({
     }));
   };
 
-  const handleSubmit = (e: any) => {
-    onSubmit(query, e);
-    setQuery(initialState)
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("saveContact", saveContact);
+    const a = await saveContact(query)
+    console.log('a', a)
   };
 
   return (

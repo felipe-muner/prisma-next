@@ -1,4 +1,5 @@
-import { PrismaClient, Contact, Prisma} from "@prisma/client";
+import { PrismaClient, Contact, Prisma } from "@prisma/client";
+// Prisma.ContactCreateInput
 import { useState, useEffect } from "react";
 import ContactForm from "../components/ContactForm";
 
@@ -12,15 +13,23 @@ export async function getServerSideProps() {
   };
 }
 
-export default function Home({ initialContacts }: { initialContacts: any[] }) {
+export default function Home({
+  initialContacts,
+}: {
+  initialContacts: Contact[];
+}) {
   const [contacts, setContacts] = useState<any[]>(initialContacts);
 
   useEffect(() => {
     setContacts(initialContacts);
   }, [initialContacts]);
 
-  async function saveContact(data: Prisma.ContactCreateInput) {
-    const contact = data;
+  const handleDelete = async () => {
+    const response = await fetch("/api/felipe");
+    console.log("deleted", response);
+  };
+
+  const saveContact = async (contact: Contact) => {
     const response = await fetch("/api/contacts", {
       method: "POST",
       body: JSON.stringify(contact),
@@ -31,27 +40,13 @@ export default function Home({ initialContacts }: { initialContacts: any[] }) {
     }
     const json = await response.json();
     setContacts([json, ...contacts]);
-  }
-
-  const handleDelete = async () => {
-    const response = await fetch("/api/felipe");
-    console.log("deleted", response);
+    return json
   };
 
   return (
     <div>
       <button onClick={handleDelete}> empty</button>
-      <ContactForm
-        onSubmit={async (data: any, e: any) => {
-          e.preventDefault();          
-          console.log(data);
-          try {
-            await saveContact(data);
-          } catch (err) {
-            console.log(err);
-          }
-        }}
-      />
+      <ContactForm saveContact={saveContact} />
       <div>
         {contacts.map((ctt) => (
           <div key={ctt.firstName}>{ctt.firstName}</div>
